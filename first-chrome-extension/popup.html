@@ -1,0 +1,38 @@
+<script type="text/javascript" src="lib/jquery.js"></script>
+<script type="text/javascript" src="shops.js"></script>
+<script type="text/javascript">
+var msPerDay = 1000 * 60 * 60 * 24; // 24 saatis shesabamisi miliwamebi
+var d = $.Deferred();
+// TODO: History-s damushaveba sheizleba bg.html-shi iyos gadasatani. mosafiqrebelia
+chrome.history.search({
+	"text": "",
+	"startTime": (new Date).getTime() - 60*msPerDay // viqeqebit 1 tvis istoriashi
+	}, function(data) { // Success callback
+		d.resolve(data.map( function(item) { // vigebt history obieqtebis masivs, v-map-avt mas url-ebis masivshi
+										return item.url
+									} )
+									.filter( function(item) { // vfiltravt regexp-ebis meshveobit
+										var generalProductRegexp = /^(?!.*category.*)(.*product[^s].*)|(.*\/p\/.*)|(.*p[-_]?\d+.*)|(.*[?&]item_?id.*)|(.*[?&]id=.*)|(.*\/\/www\.amazon\.com\/.+)|(.*-\d{3,}\.html)|(.*,pd\.html.*)$/i; // es sashineleba sxvadasxva linkebze dakvirvebit davwere
+										var amazonRegexp = /^.*\/\/www\.amazon\.com.*\/b\/.*$/i; // amazonze rac shevamchnie, ARA konkretuli produqtis linkebs ureviat "/b/"
+										return isShop(item) &&  generalProductRegexp.test(item) && !amazonRegexp.test(item);
+									} )
+		);
+	});
+
+function outputHistory(historyItems) {
+	historyItems.forEach(function(item){
+		console.log(item);
+		// TODO: rame unda vuqnat axla am linkebs, gamovachinot popup-shi, da avtvirtot cloudshi
+	})
+}
+
+$(function () {
+	$("body").append($("<div></div>").append("text"));
+	d.promise().then(outputHistory);
+});
+
+</script>
+
+<body>
+	<ul id="historyList"></ul>
+</body>
