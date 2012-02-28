@@ -6,7 +6,7 @@ var d = $.Deferred();
 // TODO: History-s damushaveba sheizleba bg.html-shi iyos gadasatani. mosafiqrebelia
 chrome.history.search({
 	"text": "",
-	"startTime": (new Date).getTime() - 60*msPerDay // viqeqebit 1 tvis istoriashi
+	"startTime": (new Date).getTime() - 60*msPerDay // viqeqebit 2 tvis istoriashi
 	}, function(data) { // Success callback
 		d.resolve(data.map( function(item) { // vigebt history obieqtebis masivs, v-map-avt mas url-ebis masivshi
 										return item.url
