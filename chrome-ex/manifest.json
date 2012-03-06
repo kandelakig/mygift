@@ -3,8 +3,8 @@
 	"version": "0.1",
 	"description": "The first extension that I made.",
 	"browser_action": {
-		"default_icon": "img/icon.png"
-		// "popup": "popup.html"
+		"default_icon": "images/icon.png",
+		"popup": "popup.html"
 	},
 	"background_page": "bg.html",
 	"permissions": [
