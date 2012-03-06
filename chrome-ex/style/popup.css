@@ -1,0 +1,9 @@
+body {
+	text-align: center;
+	background-color: #E5E0D8;
+	min-width: 600px;
+}
+
+div {
+	border: 1px solid black;
+}

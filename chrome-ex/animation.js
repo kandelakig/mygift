@@ -1,4 +1,4 @@
-var iconFolder = "img/loading/";
+var iconFolder = "images/loading/";
 var imageIndex = 0;
 var keepSwitchingIcon = false;
 var frameChangeRate = 60;
@@ -20,7 +20,7 @@ function startAnimation() {
 
 function stopAnimation() {
   keepSwitchingIcon = false;
-  setTimeout("chrome.browserAction.setIcon({ path: \"img/icon.png\" })", frameChangeRate);
+  setTimeout("chrome.browserAction.setIcon({ path: \"images/icon.png\" })", frameChangeRate);
 }
 
 function switchAnimation() {
