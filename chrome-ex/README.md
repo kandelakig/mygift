@@ -6,6 +6,3 @@
 * `animation.js`	- Script for animating `browser_action_icon` while loading
 * `popup.html`	- HTML page which loads as popup, it searches for browsing history, filters results and (at the present) just logs them with `console.log()`
 * `shops.js`	- Contains list of known e-shops
-
-testing commits from cloud9-ide
-
