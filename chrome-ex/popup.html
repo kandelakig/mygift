@@ -2,13 +2,9 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="style/popup.css">
 		<script type="text/javascript" src="lib/jquery.js"></script>
-		<script type="text/javascript" src="shops.js"></script>
-		<script type="text/javascript" src="history.js"></script>
 		<script type="text/javascript">
 			function showSuggestions(historyItems) {
 				historyItems.forEach(function(item, index){
-					console.log(index);
-					console.log(item);
 					if (index%3 == 0) {
 						$("table#suggestions-table > tbody").append($("<tr/>", {id: "suggestions-row-"+index/3}));
 					}
@@ -17,7 +13,10 @@
 				})
 			}
 
-			$(function () { analizeHistory().then(showSuggestions); });
+			$(function () {
+				var bgPage = chrome.extension.getBackgroundPage();
+				bgPage.getHistory().then(showSuggestions);
+			});
 		</script>
 	</head>
 
