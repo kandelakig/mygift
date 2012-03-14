@@ -16,6 +16,10 @@
 			$(function () {
 				var bgPage = chrome.extension.getBackgroundPage();
 				bgPage.getHistory().then(showSuggestions);
+				$("#submit-button").click(function() {
+					chrome.tabs.getSelected(null, bgPage.sendRequest);
+					close();
+				});
 			});
 		</script>
 	</head>
