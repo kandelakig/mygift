@@ -1,7 +1,6 @@
 function logAll(data) { 
   data.each( function(i,x) {
-  	
-    console.log(i+": --> height="+x.height+"; width="+x.width+" --->"+((x.height > 40)&&(x.width > 30)));
+    // console.log(i+": --> height="+x.height+"; width="+x.width+" --->"+((x.height > 40)&&(x.width > 30)));
     console.log(x);
   } );
   return data;
@@ -15,27 +14,42 @@ function retreiveImages(url) {
 	var d = $.Deferred();
 
 	$.get(url, function(data) {
-		d.resolve($("img", data)
-			// .filter( function(index, item) { // Get all images from the page
-			// 	console.log("height="+item.height+"; width="+item.width+"; returning --> "+((item.height > 40) && (item.width > 30)));
-			// 	return (item.height > 40) && (item.width > 30);
-			// } )
-			// .sort( function comparator(a, b) {
-			// 	var A = {
-			// 		"ratio": a.height / a.width,
-			// 		"area": a.height * a.width
-			// 	};
-			// 	var B = {
-			// 		"ratio": b.height / b.width,
-			// 		"area": b.height / b.width
-			// 	};
+		var images = $("img", data);
+		var imagesToLoad = images.length;
 
-			// 	A.isGood = (2/5 < A.ratio && A.ratio < 5/2);
-			// 	B.isGood = (2/5 < B.ratio && B.ratio < 5/2);
-				
-			// 	return A.isGood == B.isGood ? B.area - A.area : B.isGood - A.isGood;
-			// } )
-		);
+		function imageLoaded() {
+			imagesToLoad--;
+			if (imagesToLoad <= 0) {
+				d.resolve($("img", data)
+					.filter( function(index, item) { // Get all images from the page
+						// console.log("height="+item.height+"; width="+item.width+"; returning --> "+((item.height > 40) && (item.width > 30)));
+						return (item.height > 40) && (item.width > 30);
+					} )
+					.sort( function comparator(a, b) {
+						var A = {
+							"ratio": a.height / a.width,
+							"area": a.height * a.width
+						};
+						var B = {
+							"ratio": b.height / b.width,
+							"area": b.height / b.width
+						};
+
+						A.isGood = (2/5 < A.ratio && A.ratio < 5/2);
+						B.isGood = (2/5 < B.ratio && B.ratio < 5/2);
+						
+						return A.isGood == B.isGood ? B.area - A.area : B.isGood - A.isGood;
+					} )
+				);
+			}
+		}
+
+		images.each(function(index, image) {
+			image.onload = imageLoaded;
+			if (image.complete) {
+				imageLoaded();
+			}
+		});
 	});
 
 	return d.promise();
