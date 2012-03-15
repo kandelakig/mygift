@@ -1,3 +1,46 @@
+function logAll(data) { 
+  data.each( function(i,x) {
+  	
+    console.log(i+": --> height="+x.height+"; width="+x.width+" --->"+((x.height > 40)&&(x.width > 30)));
+    console.log(x);
+  } );
+  return data;
+}
+function test() {
+	var url = "http://www.amazon.com/Waring-WHM100-Professional-10-Speed-Mixer/dp/B0036FRRR0/ref=sr_1_1?s=kitchen&ie=UTF8&qid=1330270558&sr=1-1";
+	return retreiveImages(url).then(logAll);
+}
+
+function retreiveImages(url) {
+	var d = $.Deferred();
+
+	$.get(url, function(data) {
+		d.resolve($("img", data)
+			// .filter( function(index, item) { // Get all images from the page
+			// 	console.log("height="+item.height+"; width="+item.width+"; returning --> "+((item.height > 40) && (item.width > 30)));
+			// 	return (item.height > 40) && (item.width > 30);
+			// } )
+			// .sort( function comparator(a, b) {
+			// 	var A = {
+			// 		"ratio": a.height / a.width,
+			// 		"area": a.height * a.width
+			// 	};
+			// 	var B = {
+			// 		"ratio": b.height / b.width,
+			// 		"area": b.height / b.width
+			// 	};
+
+			// 	A.isGood = (2/5 < A.ratio && A.ratio < 5/2);
+			// 	B.isGood = (2/5 < B.ratio && B.ratio < 5/2);
+				
+			// 	return A.isGood == B.isGood ? B.area - A.area : B.isGood - A.isGood;
+			// } )
+		);
+	});
+
+	return d.promise();
+}
+
 function analizeHistory() {
 	var msPerDay = 1000 * 60 * 60 * 24; // 24 saatis shesabamisi miliwamebi
 	var d = $.Deferred();
