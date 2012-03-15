@@ -1,6 +1,6 @@
 function logAll(data) { 
   data.each( function(i,x) {
-    // console.log(i+": --> height="+x.height+"; width="+x.width+" --->"+((x.height > 40)&&(x.width > 30)));
+    console.log(i+": --> height="+x.height+"; width="+x.width+" --->"+((x.height > 40)&&(x.width > 30)));
     console.log(x);
   } );
   return data;
@@ -22,7 +22,6 @@ function retreiveImages(url) {
 			if (imagesToLoad <= 0) {
 				d.resolve($("img", data)
 					.filter( function(index, item) { // Get all images from the page
-						// console.log("height="+item.height+"; width="+item.width+"; returning --> "+((item.height > 40) && (item.width > 30)));
 						return (item.height > 40) && (item.width > 30);
 					} )
 					.sort( function comparator(a, b) {
@@ -32,7 +31,7 @@ function retreiveImages(url) {
 						};
 						var B = {
 							"ratio": b.height / b.width,
-							"area": b.height / b.width
+							"area": b.height * b.width
 						};
 
 						A.isGood = (2/5 < A.ratio && A.ratio < 5/2);
