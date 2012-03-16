@@ -24,7 +24,7 @@
 					row.append(cell);
 
 					var img = $("<img/>", {
-						"id": "suggestions-image-"+index,
+						"id": "img-"+item.id,
 						"class": "suggestions-image",
 						"src": "images/loading/loading.gif",
 						"onClick": "chrome.tabs.create({url: '" + item.url + "'});",

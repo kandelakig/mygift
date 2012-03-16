@@ -67,6 +67,7 @@ function analizeHistory() {
 									.slice(0, 9)
 									.map( function(item) {
 										return {
+											"id": item.id,
 											"url": item.url,
 											"title": item.title,
 											"images": retreiveImages(item.url),
