@@ -32,12 +32,29 @@
 						"title": item.title
 					})
 
-					item.promise.then(function(data) {
-						console.log(data.histId);
-						console.log(data.images[0]);
-					})
-
 					cell.append(img);
+
+					item.promise.then(function(data) {
+						var img = data.images[0];
+						var i=0;
+						while (img.attributes.length > 1) {
+							if (img.attributes.item(i).nodeName != "src") {
+								img.removeAttribute(img.attributes.item(i).nodeName);
+							} else {
+								i++;
+							}
+						}
+						img.setAttribute("id", "img-"+data.histId);
+						img.setAttribute("class", "suggestions-image");
+						img.setAttribute("onClick", "chrome.tabs.create({url: '" + item.url + "'});");
+						img.setAttribute("alt", item.title);
+						img.setAttribute("title", item.title);
+
+						console.log(img);
+						var loadingImg = $("#loading-img-"+data.histId);
+						$(img).insertAfter(loadingImg);
+						loadingImg.remove();
+					})
 				})
 			}
 

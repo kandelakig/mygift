@@ -43,6 +43,8 @@ function retreiveImages(url, histId) {
 			}
 		}
 
+		images.unbind("load");
+		images.unbind("error");
 		images.bind("load", imageLoaded);
 		images.bind("error", imageLoadingError);
 	});
