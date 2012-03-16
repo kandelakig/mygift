@@ -24,12 +24,17 @@
 					row.append(cell);
 
 					var img = $("<img/>", {
-						"id": "img-"+item.id,
+						"id": "loading-img-"+item.id,
 						"class": "suggestions-image",
 						"src": "images/loading/loading.gif",
 						"onClick": "chrome.tabs.create({url: '" + item.url + "'});",
 						"alt": item.title,
 						"title": item.title
+					})
+
+					item.promise.then(function(data) {
+						console.log(data.histId);
+						console.log(data.images[0]);
 					})
 
 					cell.append(img);

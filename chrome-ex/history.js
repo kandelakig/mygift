@@ -1,4 +1,4 @@
-function retreiveImages(url) {
+function retreiveImages(url, histId) {
 	var prefix = /^\w+:\/\/[^\/]*/.exec(url)[0];
 	var d = $.Deferred();
 
@@ -25,12 +25,15 @@ function retreiveImages(url) {
 		function imageLoaded() {
 			imagesToLoad--;
 			if (imagesToLoad <= 0) {
-				d.resolve(images
-					.filter( function(index, item) { // vfiltravt patara suratebisgan
-						return (item.height > 40) && (item.width > 30);
-					} )
-					.sort(comparator) // vasortirebs zemotagwerili logikit
-				);
+				d.resolve({
+						"histId": histId,
+						"images": images
+						.filter( function(index, item) { // vfiltravt patara suratebisgan
+							return (item.height > 40) && (item.width > 30);
+						} )
+						.sort(comparator) // vasortirebs zemotagwerili logikit
+					}
+				)
 			}
 		}
 
@@ -70,7 +73,7 @@ function analizeHistory() {
 											"id": item.id,
 											"url": item.url,
 											"title": item.title,
-											"images": retreiveImages(item.url),
+											"promise": retreiveImages(item.url, item.id),
 											"lastVisitTime": item.lastVisitTime,
 											"visitCount": item.visitCount
 										}
