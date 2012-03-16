@@ -1,7 +1,3 @@
-function getExtensionId(){
-  return chrome.i18n.getMessage("@@extension_id");
-}
-
 var db = $.couch.db("test"); // satestod bazas qvia "Test", momavalshi sheicvleba
 
 function sendRequest(tab) {

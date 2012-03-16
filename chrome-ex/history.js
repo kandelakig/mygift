@@ -1,54 +1,47 @@
-function logAll(data) { 
-  data.each( function(i,x) {
-    console.log(i+": --> height="+x.height+"; width="+x.width+" --->"+((x.height > 40)&&(x.width > 30)));
-    console.log(x);
-  } );
-  return data;
-}
-function test() {
-	var url = "http://www.amazon.com/Waring-WHM100-Professional-10-Speed-Mixer/dp/B0036FRRR0/ref=sr_1_1?s=kitchen&ie=UTF8&qid=1330270558&sr=1-1";
-	return retreiveImages(url).then(logAll);
-}
-
 function retreiveImages(url) {
+	var prefix = /^\w+:\/\/[^\/]*/.exec(url)[0];
 	var d = $.Deferred();
 
 	$.get(url, function(data) {
 		var images = $("img", data);
 		var imagesToLoad = images.length;
 
+		function comparator(a, b) {
+			var A = {
+				"ratio": a.height / a.width,
+				"area": a.height * a.width
+			};
+			var B = {
+				"ratio": b.height / b.width,
+				"area": b.height * b.width
+			};
+
+			A.isGood = (2/5 < A.ratio && A.ratio < 5/2);
+			B.isGood = (2/5 < B.ratio && B.ratio < 5/2);
+			
+			return A.isGood == B.isGood ? B.area - A.area : B.isGood - A.isGood;
+		}
+
 		function imageLoaded() {
 			imagesToLoad--;
 			if (imagesToLoad <= 0) {
-				d.resolve($("img", data)
-					.filter( function(index, item) { // Get all images from the page
+				d.resolve(images
+					.filter( function(index, item) { // vfiltravt patara suratebisgan
 						return (item.height > 40) && (item.width > 30);
 					} )
-					.sort( function comparator(a, b) {
-						var A = {
-							"ratio": a.height / a.width,
-							"area": a.height * a.width
-						};
-						var B = {
-							"ratio": b.height / b.width,
-							"area": b.height * b.width
-						};
-
-						A.isGood = (2/5 < A.ratio && A.ratio < 5/2);
-						B.isGood = (2/5 < B.ratio && B.ratio < 5/2);
-						
-						return A.isGood == B.isGood ? B.area - A.area : B.isGood - A.isGood;
-					} )
+					.sort(comparator) // vasortirebs zemotagwerili logikit
 				);
 			}
 		}
 
-		images.each(function(index, image) {
-			image.onload = imageLoaded;
-			if (image.complete) {
-				imageLoaded();
+		function imageLoadingError() {
+			if (this.src.slice(0, 19) == "chrome-extension://") {
+				this.src = prefix+this.src.slice(51);
 			}
-		});
+		}
+
+		images.bind("load", imageLoaded);
+		images.bind("error", imageLoadingError);
 	});
 
 	return d.promise();
@@ -57,7 +50,7 @@ function retreiveImages(url) {
 function analizeHistory() {
 	var msPerDay = 1000 * 60 * 60 * 24; // 24 saatis shesabamisi miliwamebi
 	var d = $.Deferred();
-	// TODO: History-s damushaveba sheizleba bg.html-shi iyos gadasatani. mosafiqrebelia
+
 	chrome.history.search({
 		"text": "",
 		"startTime": (new Date).getTime() - 30*msPerDay, // viqeqebit 2 tvis istoriashi
