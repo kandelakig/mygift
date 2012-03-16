@@ -65,6 +65,15 @@ function analizeHistory() {
 										return b.visitCount - a.visitCount == 0 ? b.lastVisitTime - a.lastVisitTime : b.visitCount - a.visitCount;
 									} )
 									.slice(0, 9)
+									.map( function(item) {
+										return {
+											"url": item.url,
+											"title": item.title,
+											"images": retreiveImages(item.url),
+											"lastVisitTime": item.lastVisitTime,
+											"visitCount": item.visitCount
+										}
+									} )
 		);
 	});
 	// vabrunebt "danapirebs"
