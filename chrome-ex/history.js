@@ -68,7 +68,7 @@ function retreiveImages(url) {
 function analizeHistory() {
 	var msPerDay = 1000 * 60 * 60 * 24; // 24 saatis shesabamisi miliwamebi
 	var d = $.Deferred();
-	// TODO: History-s damushaveba sheizleba bg.html-shi iyos gadasatani. mosafiqrebelia
+
 	chrome.history.search({
 		"text": "",
 		"startTime": (new Date).getTime() - 30*msPerDay, // viqeqebit 2 tvis istoriashi
