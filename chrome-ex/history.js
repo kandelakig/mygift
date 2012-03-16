@@ -26,28 +26,30 @@ function retreiveImages(url) {
 		var images = $("img", data);
 		var imagesToLoad = images.length;
 
+		function comparator(a, b) {
+			var A = {
+				"ratio": a.height / a.width,
+				"area": a.height * a.width
+			};
+			var B = {
+				"ratio": b.height / b.width,
+				"area": b.height * b.width
+			};
+
+			A.isGood = (2/5 < A.ratio && A.ratio < 5/2);
+			B.isGood = (2/5 < B.ratio && B.ratio < 5/2);
+			
+			return A.isGood == B.isGood ? B.area - A.area : B.isGood - A.isGood;
+		}
+
 		function imageLoaded() {
 			imagesToLoad--;
 			if (imagesToLoad <= 0) {
 				d.resolve(images
-					.filter( function(index, item) { // Get all images from the page
+					.filter( function(index, item) { // vfiltravt patara suratebisgan
 						return (item.height > 40) && (item.width > 30);
 					} )
-					.sort( function comparator(a, b) {
-						var A = {
-							"ratio": a.height / a.width,
-							"area": a.height * a.width
-						};
-						var B = {
-							"ratio": b.height / b.width,
-							"area": b.height * b.width
-						};
-
-						A.isGood = (2/5 < A.ratio && A.ratio < 5/2);
-						B.isGood = (2/5 < B.ratio && B.ratio < 5/2);
-						
-						return A.isGood == B.isGood ? B.area - A.area : B.isGood - A.isGood;
-					} )
+					.sort(comparator) // vasortirebs zemotagwerili logikit
 				);
 			}
 		}
