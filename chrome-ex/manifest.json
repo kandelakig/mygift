@@ -10,6 +10,8 @@
 	"permissions": [
 		"history",
 		"tabs",
-		"https://kandela.cloudant.com/*"
+		"https://kandela.cloudant.com/*",
+		"https://*/*",
+		"http://*/*"
 	]
 }
