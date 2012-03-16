@@ -7,17 +7,32 @@
 				historyItems.forEach(function(item, index){
 					var row;
 					if (index%3 == 0) {
-						row = $("<tr/>", {id: "suggestions-row-"+index/3});
-						$("table#suggestions-table > tbody").append(row);
+						row = $("<tr/>", {
+							"id": "suggestions-row-"+index/3,
+							"class": "suggestions-row"
+						})
+						$("table#suggestions-table>tbody").append(row);
 					} else {
 						row = $("tr#suggestions-row-"+Math.floor(index/3));
 					}
 
-					var cell = $("<td/>", {id: "suggestions-cell-"+index});
+					var cell = $("<td/>", {
+						"id": "suggestions-cell-"+index,
+						"class": "suggestions-cell"
+					})
 
 					row.append(cell);
-					
-					cell.append($("<a/>", {"href": "#", "onClick": "chrome.tabs.create({url: '" + item.url + "'});"}).append(item.title));
+
+					var img = $("<img/>", {
+						"id": "suggestions-image-"+index,
+						"class": "suggestions-image",
+						"src": "images/loading/loading.gif",
+						"onClick": "chrome.tabs.create({url: '" + item.url + "'});",
+						"alt": item.title,
+						"title": item.title
+					})
+
+					cell.append(img);
 				})
 			}
 
@@ -38,7 +53,7 @@
 				<input type="button" id="submit-button" value="Buy it for me!" />
 			</div>
 			<div id="suggestion-box">
-				<label id="suggestions">Suggestions</label>
+				<label id="suggestions-title">Suggestions</label>
 				<table id="suggestions-table">
 					<tbody>
 					</tbody>
