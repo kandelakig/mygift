@@ -19,6 +19,7 @@ function test3() {
 }
 
 function retreiveImages(url) {
+	var prefix = /^\w+:\/\/[^\/]*/.exec(url)[0];
 	var d = $.Deferred();
 
 	$.get(url, function(data) {
@@ -28,7 +29,7 @@ function retreiveImages(url) {
 		function imageLoaded() {
 			imagesToLoad--;
 			if (imagesToLoad <= 0) {
-				d.resolve($("img", data)
+				d.resolve(images
 					.filter( function(index, item) { // Get all images from the page
 						return (item.height > 40) && (item.width > 30);
 					} )
@@ -51,12 +52,14 @@ function retreiveImages(url) {
 			}
 		}
 
-		images.each(function(index, image) {
-			image.onload = imageLoaded;
-			if (image.complete) {
-				imageLoaded();
+		function imageLoadingError() {
+			if (this.src.slice(0, 19) == "chrome-extension://") {
+				this.src = prefix+this.src.slice(51);
 			}
-		});
+		}
+
+		images.bind("load", imageLoaded);
+		images.bind("error", imageLoadingError);
 	});
 
 	return d.promise();
