@@ -409,7 +409,8 @@ var knownShops = ["www.victoriassecret.com"
 ,"www.autoanything.com"
 ,"www.discountbodyparts.com"
 ,"www.andysautosport.com"
-,"www.partsgeek.com"];
+,"www.partsgeek.com"
+,"www.thinkgeek.com"];
 
 function isShop(url) {
 	for (var i = 0; i < knownShops.length; i++) {
