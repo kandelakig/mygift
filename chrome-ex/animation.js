@@ -20,7 +20,7 @@ function startAnimation() {
 
 function stopAnimation() {
 	keepSwitchingIcon = false;
-	setTimeout("chrome.browserAction.setIcon({ path: \"images/icon.png\" })", frameChangeRate);
+	setTimeout("chrome.browserAction.setIcon({ path: \"images/gift.png\" })", frameChangeRate);
 }
 
 function switchAnimation() {
