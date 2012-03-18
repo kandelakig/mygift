@@ -3,13 +3,15 @@
 	"version": "0.1",
 	"description": "The first extension that I made.",
 	"browser_action": {
-		"default_icon": "images/icon.png",
+		"default_icon": "images/gift.png",
 		"popup": "popup.html"
 	},
 	"background_page": "bg.html",
 	"permissions": [
 		"history",
 		"tabs",
-		"https://kandela.cloudant.com/*"
+		"https://kandela.cloudant.com/*",
+		"https://*/*",
+		"http://*/*"
 	]
 }

@@ -1,55 +1,81 @@
 <html>
 	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" type="text/css" href="style/popup.css">
 		<script type="text/javascript" src="lib/jquery.js"></script>
-		<script type="text/javascript" src="shops.js"></script>
 		<script type="text/javascript">
-			var msPerDay = 1000 * 60 * 60 * 24; // 24 saatis shesabamisi miliwamebi
-			var d = $.Deferred();
-			// TODO: History-s damushaveba sheizleba bg.html-shi iyos gadasatani. mosafiqrebelia
-			chrome.history.search({
-				"text": "",
-				"startTime": (new Date).getTime() - 30*msPerDay, // viqeqebit 2 tvis istoriashi
-				"maxResults": 1000
-			}, function(data) { // Success callback
-				d.resolve(data.filter( function(item) { // vfiltravt regexp-ebis meshveobit
-												var generalProductRegexp = /^(?!.*category.*)(.*product[^s].*)|(.*\/p\/.*)|(.*p[-_]?\d+.*)|(.*[?&]item_?id.*)|(.*[?&]id=.*)|(.*\/\/www\.amazon\.com\/.+)|(.*-\d{3,}\.html)|(.*,pd\.html.*)$/i; // es sashineleba sxvadasxva linkebze dakvirvebit davwere
-												var amazonRegexp = /^.*\/\/www\.amazon\.com.*\/b\/.*$/i; // amazonze rac shevamchnie, ARA konkretuli produqtis linkebs ureviat "/b/"
-												return isShop(item.url) &&  generalProductRegexp.test(item.url) && !amazonRegexp.test(item.url);
-											} )
-											.sort( function comparator(a, b) {
-												return b.visitCount - a.visitCount == 0 ? b.lastVisitTime - a.lastVisitTime : b.visitCount - a.visitCount;
-											} )
-											.slice(0, 9)
-				);
-			});
-
 			function showSuggestions(historyItems) {
 				historyItems.forEach(function(item, index){
-					console.log(index);
-					console.log(item);
+					var row;
 					if (index%3 == 0) {
-						$("table#suggestions-table > tbody").append($("<tr/>", {id: "suggestions-row-"+index/3}));
+						row = $("<tr/>", {
+							"id": "suggestions-row-"+index/3,
+							"class": "suggestions-row"
+						})
+						$("table#suggestions-table>tbody").append(row);
+					} else {
+						row = $("tr#suggestions-row-"+Math.floor(index/3));
 					}
-					$("tr#suggestions-row-"+Math.floor(index/3)).append($("<td/>", {id: "suggestions-cell-"+index}));
-					$("td#suggestions-cell-"+index).append($("<a/>", {"href": "#", "onClick": "chrome.tabs.create({url: '" + item.url + "'});"})
-																				 .append(item.title));
+
+					var cell = $("<td/>", {
+						"id": "suggestions-cell-"+index,
+						"class": "suggestions-cell"
+					})
+
+					row.append(cell);
+
+					var img = $("<img/>", {
+						"id": "loading-img-"+item.id,
+						"class": "suggestions-image",
+						"src": "images/loading/loading.gif",
+						"onClick": "chrome.tabs.create({url: '" + item.url + "'});",
+						"alt": item.title,
+						"title": item.title
+					})
+
+					cell.append(img);
+
+					item.promise.then(function(data) {
+						var img = data.images[0];
+						var i=0;
+						while (img.attributes.length > 1) {
+							if (img.attributes.item(i).nodeName != "src") {
+								img.removeAttribute(img.attributes.item(i).nodeName);
+							} else {
+								i++;
+							}
+						}
+						img.setAttribute("id", "img-"+data.histId);
+						img.setAttribute("class", "suggestions-image");
+						img.setAttribute("onClick", "chrome.tabs.create({url: '" + item.url + "'});");
+						img.setAttribute("alt", item.title);
+						img.setAttribute("title", item.title);
+
+						var loadingImg = $("#loading-img-"+data.histId);
+						$(img).insertAfter(loadingImg);
+						loadingImg.remove();
+					})
 				})
 			}
 
 			$(function () {
-				d.promise().then(showSuggestions);
+				var bgPage = chrome.extension.getBackgroundPage();
+				bgPage.getHistory().then(showSuggestions);
+				$("#submit-button").click(function() {
+					chrome.tabs.getSelected(null, bgPage.sendRequest);
+					close();
+				});
 			});
 		</script>
 	</head>
 
 	<body>
 		<div id="popup-box">
-			<div>
-				<input type="button" id="submit-button" value="Buy it for me!" />
+			<div id="submit-box">
+				<div id="submit-button" class="round-corners">მიყიდე!</div>
 			</div>
 			<div id="suggestion-box">
-				<label id="suggestions">Suggestions</label>
+				<label id="suggestions-title">Suggestions</label>
 				<table id="suggestions-table">
 					<tbody>
 					</tbody>
