@@ -8,6 +8,22 @@ div {
 	border: 1px solid black;
 }
 
+#submit-box {
+	text-align: center;
+}
+
+#submit-button {
+	width: 280px;
+	font-size: 32px;
+	background-color: #E8E8E8;
+	border: 1px solid black;
+	margin: 3px auto;
+}
+
+#submit-button:hover {
+	cursor: pointer;
+}
+
 .suggestions-cell {
 	text-align: center;
 	width: 101px;
@@ -22,4 +38,11 @@ div {
 
 .suggestions-image:hover {
 	cursor: pointer;
+}
+
+.round-corners {
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-khtml-border-radius: 10px;
+	border-radius: 10px;
 }
